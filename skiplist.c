@@ -16,7 +16,7 @@ void sl_free_entry(sl_entry * entry);
 int grand (int max) {
     int result = 1;
 
-    while (result <= max && (random() > RAND_MAX / 2)) {
+    while (result < max && (random() > RAND_MAX / 2)) {
         ++ result;
     }
 
@@ -33,7 +33,7 @@ sl_entry * sl_init() {
     }
 
     // Construct and return the head sentinel
-    sl_entry * head = calloc(1, sizeof(sl_entry));
+    sl_entry * head = calloc(1, sizeof(sl_entry)); // Calloc will zero out next
     if (!head) return NULL; // Out-of-memory check
     head->height = MAX_SKIPLIST_HEIGHT;
 
@@ -109,7 +109,12 @@ void sl_set(sl_entry * head, char * key, char * value) {
     new_entry->key = strdup(key);
     new_entry->value = strdup(value);
     int i;
-    for (i = new_entry->height - 1; i >= 0; i --) {
+    // Null out pointers above height
+    for (i = MAX_SKIPLIST_HEIGHT - 1; i > new_entry->height; -- i) { 
+        new_entry->next[i] = NULL;
+    }
+    // Tie in other pointers
+    for (i = new_entry->height - 1; i >= 0; -- i) {
         new_entry->next[i] = prev[i]->next[i];
         prev[i]->next[i] = new_entry;
     }
@@ -121,6 +126,13 @@ void sl_free_entry(sl_entry * entry) {
     entry->key = NULL;
     free(entry->value);
     entry->value = NULL;
+
+    // TODO remove this, it's here for debug purposes
+    int i;
+    for (i = 0; i < MAX_SKIPLIST_HEIGHT; ++ i) {
+        entry->next[i] = 0xDEADBEEF;
+    }
+
     free(entry);
     entry = NULL;
 }
@@ -136,11 +148,11 @@ void sl_unset(sl_entry * head, char * key) {
             -- level;
         } else {
             int cmp = strcmp(curr->next[level]->key, key);
-            if (cmp == 0) { // Found a match, replace the old value
+            if (cmp == 0) { // Found a match
                 sl_entry * condemned = curr->next[level];
                 // Remove the condemned node from the chain
                 int i;
-                for (i = condemned->height - 1; i >= 0; i --) {
+                for (i = condemned->height - 1; i >= 0; -- i) {
                   curr->next[i] = condemned->next[i];
                 }
                 // Free it
