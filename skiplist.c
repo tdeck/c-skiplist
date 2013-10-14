@@ -1,11 +1,15 @@
+// (C) 2013 by Troy Deck; see LICENSE.txt for details
+#include "skiplist.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "skiplist.h"
 
 int seeded = 0;
 
 void sl_free_entry(sl_entry * entry);
+
+// TODO have void functions (especially sl_set) return error codes and do proper
+//      checking after allocations.
 
 // Returns a random number in the range [1, max] following the geometric 
 // distribution.
@@ -30,6 +34,7 @@ sl_entry * sl_init() {
 
     // Construct and return the head sentinel
     sl_entry * head = calloc(1, sizeof(sl_entry));
+    if (!head) return NULL; // Out-of-memory check
     head->height = MAX_SKIPLIST_HEIGHT;
 
     return head;

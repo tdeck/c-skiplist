@@ -1,3 +1,15 @@
+/*  A simple C skip list implementation mapping string keys to string values.
+ *
+ *  Designed with simplicity and minimalism in mind, this implementation uses
+ *  fixed-size pillar arrays.
+ *
+ *  I wrote this because skip lists are my favorite data structure. They are
+ *  relatively easy to write and understand (in contrast with certain types of
+ *  self-balancing binary trees), use no "magic" hash functions, and still
+ *  manage to provide expected O(log n) insertion, search, and deletion.
+ *
+ *  (C) 2013 by Troy Deck; see LICENSE.txt for details
+ */
 #ifndef SLIST
 #define SLIST   1
 
@@ -19,10 +31,12 @@ typedef struct sl_entry {
 
 // Note: All of these functions copy the strings provided to avoid any internal
 // dangling pointers. You still own the pointers you pass in, and are 
-// responsible for managing that memory.
-sl_entry * sl_init();
-void sl_destroy(sl_entry * head);
-char * sl_get(sl_entry * head, char * key);
-void sl_set(sl_entry * head, char * key, char * value);
-void sl_unset(sl_entry * head, char * key);
+// responsible for managing that memory. Pointers returned to you point
+// to copied values, and you are also responsible for freeing those pointers
+// when you no longer need them.
+sl_entry * sl_init(); // Allocates a new list and return its head
+void sl_destroy(sl_entry * head); // Frees the resources used by a list
+char * sl_get(sl_entry * head, char * key); // Returns a key's value
+void sl_set(sl_entry * head, char * key, char * value); // Sets a key's value
+void sl_unset(sl_entry * head, char * key); // Removes a key, value pair
 #endif
