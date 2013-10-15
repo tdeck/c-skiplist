@@ -127,43 +127,43 @@ void sl_free_entry(sl_entry * entry) {
     free(entry->value);
     entry->value = NULL;
 
-    // TODO remove this, it's here for debug purposes
-    int i;
-    for (i = 0; i < MAX_SKIPLIST_HEIGHT; ++ i) {
-        entry->next[i] = 0xDEADBEEF;
-    }
-
     free(entry);
     entry = NULL;
 }
 
 // Removes a key, value association from the skip list.
 void sl_unset(sl_entry * head, char * key) {
+    sl_entry * prev[MAX_SKIPLIST_HEIGHT];
     sl_entry * curr = head;
     int level = head->height - 1;
 
-    // Find the position where the key is expected
+    // Find the list node just before the condemned node at every
+    // level of the chain
+    int cmp = 1;
     while (curr != NULL && level >= 0) {
+        prev[level] = curr;
         if (curr->next[level] == NULL) {
             -- level;
         } else {
-            int cmp = strcmp(curr->next[level]->key, key);
-            if (cmp == 0) { // Found a match
-                sl_entry * condemned = curr->next[level];
-                // Remove the condemned node from the chain
-                int i;
-                for (i = condemned->height - 1; i >= 0; -- i) {
-                  curr->next[i] = condemned->next[i];
-                }
-                // Free it
-                sl_free_entry(condemned);
-                condemned = NULL;
-                return;
-            } else if (cmp > 0) { // Drop down a level 
+            cmp = strcmp(curr->next[level]->key, key);
+            if (cmp >= 0) { // Drop down a level 
                 -- level;
             } else { // Keep going at this level
                 curr = curr->next[level];
             }
         }
+    }
+
+    // We found the match we want, and it's in the next pointer
+    if (curr && !cmp) { 
+        sl_entry * condemned = curr->next[0];
+        // Remove the condemned node from the chain
+        int i;
+        for (i = condemned->height - 1; i >= 0; -- i) {
+          prev[i]->next[i] = condemned->next[i];
+        }
+        // Free it
+        sl_free_entry(condemned);
+        condemned = NULL;
     }
 }
