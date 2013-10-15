@@ -17,25 +17,27 @@ most `MAX_SKIPLIST_HEIGHT` pointers to other nodes. As the base-2 logarithm of t
 
 With these caveats, usage is pretty simple:
 
-    // Create a list
-    sl_entry * list = sl_init();
-    
-    // Add some elements
-    sl_set(list, "Andy", "Apple");
-    sl_set(list, "Brian", "Banana");
-    sl_set(list, "Cindy", "Cherry");
+```C
+// Create a list
+sl_entry * list = sl_init();
 
-    // Perform a lookup
-    char * result = sl_get(list, "Brian");
-    // Remember to free the result!
-    free(result);
-    result = NULL;
+// Add some elements
+sl_set(list, "Andy", "Apple");
+sl_set(list, "Brian", "Banana");
+sl_set(list, "Cindy", "Cherry");
 
-    // Remove an element
-    sl_unset(list, "Andy");
+// Perform a lookup
+char * result = sl_get(list, "Brian");
+// Remember to free the result!
+free(result);
+result = NULL;
 
-    // Free the list and all its nodes
-    sl_destroy(list);
+// Remove an element
+sl_unset(list, "Andy");
+
+// Free the list and all its nodes
+sl_destroy(list);
+```
 
 Why did you write it?
 ---------------------
