@@ -6,7 +6,7 @@ What is it?
 -----------
 A [skip list](http://en.wikipedia.org/wiki/Skip_list) is a simple associative data structure. That is, it maps keys to values, in very much the same way as a hash table/dictionary/HashMap/map from your favorite programming language. The beauty of skip lists is that they are relatively easy to understand and implement, and don't require a good hash function, only a total ordering of keys.
 
-The average insert/update/delete performance of a skip list is O(log(n)), similar to that of a [balanced binary tree](http://en.wikipedia.org/wiki/Balanced_binary_tree). However, skip lists depend on probability to accomplish this result, so it's not guaranteed. In the worst case, which is very uncommon, an operation may be linear in the number of list elements. Skip lists provide no guarantee about performance, which is why they are less commonly used than other associative data structures.
+The average insert/update/delete performance of a skip list is O(log(n)), similar to that of a [balanced binary tree](http://en.wikipedia.org/wiki/Balanced_binary_tree). However, skip lists depend on probability to accomplish this result, so it's not guaranteed. In the worst case, which is very uncommon, an operation may be linear in the number of list elements. Because skip list performance is non-deterministic, they are less commonly seen in the wild than other associative data structures.
 
 How can I use it?
 -----------------
