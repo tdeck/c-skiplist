@@ -10,12 +10,13 @@ The average insert/update/delete performance of a skip list is O(log(n)), simila
 
 How can I use it?
 -----------------
-However you like! This version can store any data type you want, so long as it's a C-style string to C-style string mapping. It should be relatively easy to hack it up to work with oter types, should you find yourself so inclined.
+However you like! This version can store any data type you want, so long as it's a C-style string to C-style string mapping. It should be relatively easy to hack it up to work with other types, should you find yourself so inclined.
 
 These lists also have a fixed pillar height (that is, each node can have at
 most `MAX_SKIPLIST_HEIGHT` pointers to other nodes. As the base-2 logarithm of the number of elements in your list becomes larger than this value, your list's performance will degrade. The implementation will not (and indeed cannot) automatically grow these next pointer arrays, but it won't break, either.
 
 With these caveats, usage is pretty simple:
+
     // Create a list
     sl_entry * list = sl_init();
     
